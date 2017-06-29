@@ -10,7 +10,24 @@ from tester import dump_classifier_and_data
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
-features_list = ['poi','salary'] # You will need to use more features
+features_list = ['poi',
+				 'salary',
+				 'bonus', 
+				 'deferral_payments',
+				 'director_fees',
+				 'excecised_stock_options',
+				 'expenses',
+				 'from_messages',
+				 'from_poi_to_this_person',
+				 'from_person_to_this_poi',
+				 'loan_advances',
+				 'long_term_incetive',
+				 'restricted_stock',
+				 'restricted_stock_deferred',
+				 'salary',
+				 'to_messages',
+				 'total_payments',
+				 'total_stock_value'] 
 
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
