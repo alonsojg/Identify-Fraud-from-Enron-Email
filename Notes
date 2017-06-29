@@ -1,0 +1,34 @@
+Outlier Removal:
+
+	crop off the top 10% using residual error using enron_outliers.py
+
+	Just for experimentational purposes, I decided to use a standard deviation 
+	based logic system in order to discriminate against outliers, instead of 
+	simply cutting any x% off the top of any feature-column's values. This 
+	seeme too subjective to me
+
+	the system lists the value, and position of any column item if it exceeds a 
+	threshold in terms of that column's respective standard deviation. it also
+	logs that columns's respective mean and standard deviation.
+
+	once this is accomplished, it is then turned into a dictionarys' key's 
+	value (the key being the respective feature name).
+
+	the format is as such:
+
+	{feature_1: [(position,
+                 	value,
+                 	mean,
+                 	std),
+                 	...
+                 ],
+
+     feature_2: [(position,
+                 	value,
+                 	mean,
+                 	std),
+                 	...
+                 ]
+     
+      ...
+      }
