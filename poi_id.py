@@ -34,6 +34,11 @@ with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
 ### Task 2: Remove outliers
+
+data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r") )
+features = ["salary", "bonus"]
+data = featureFormat(data_dict, features)
+
 ### Task 3: Create new feature(s)
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
