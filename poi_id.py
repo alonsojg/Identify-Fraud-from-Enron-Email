@@ -60,15 +60,15 @@ def check_for_outliers(df, feature, xstd = 3):
 	mean = df[feature].mean()
 
 	dictionary[feature] = []
-	i = 0 
+	position = 0 
 
 	for value in df[feature]:
-		i += 1
+		position += 1
 		if greater_than_xstds(value, std, mean, multiplier = xstd):
-			index_v = dictionary[feature].append(("position: " + str(i),
-												  "value: " + str(value),
-												  "mean: "+ str(mean),
-												  "std: "+ str(std)))
+			index_v = dictionary[feature].append((position,
+												  value,
+												  mean,
+												  std))
 		else:
 			pass
 
