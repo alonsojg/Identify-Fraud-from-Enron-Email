@@ -114,7 +114,7 @@ outliers_index_numbers = set(outliers_index_numbers)
 # print
 # print "Row indexes: "
 # pp.pprint(outliers_index_numbers)
-################################################################################
+################################################################################ 
 
 # Now let's eliminate these
 
@@ -125,8 +125,7 @@ outliers_index_numbers = set(outliers_index_numbers)
 
 # # Dropping
 
-print
-print df.index[df.poi == 1.0] 
+print 
 
 df.drop(outliers_index_numbers, inplace = True)
 
@@ -134,6 +133,8 @@ df.drop(outliers_index_numbers, inplace = True)
 # print
 # print "After dropping outlier rows: ",df.shape
 # print
+
+
 
 ################################################################################
 ### Also, I am pickling out this dictionary to perform further independent analysis.
