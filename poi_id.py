@@ -1,14 +1,19 @@
 #!/usr/bin/python
 
 import sys
+import os
 import pandas as pd
 import pickle
 import pprint as pp
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
 sys.path.append("../tools/")
 
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
+
+plt.style.use('ggplot')
 
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
@@ -35,14 +40,19 @@ features_list = ['poi',
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
+print len(features_list)
 ### Task 2: Remove outliers
 
 data_dict = pickle.load(open("../final_project/final_project_dataset.pkl", "r"))
-features = features_list
-data = featureFormat(data_dict, features)
+data = featureFormat(data_dict, features_list)
 df = pd.DataFrame(data, columns = features_list)
 
+# we will store our feature's title and their respective outliers instances in
+# dictionary
+
 dictionary = {}
+
+# Making our standard deviation driscrimination system:
 
 def greater_than_xstds(integer, std , mean, multiplier = 3):
 
@@ -53,17 +63,17 @@ def greater_than_xstds(integer, std , mean, multiplier = 3):
 	else:
 		return False
 
+# Here we will create a function which will use our greater_than_xstds function
+# in order to find our outliers and log their respective information.
 
 def check_for_outliers(df, feature, xstd = 3):
 
 	std = df[feature].std()
 	mean = df[feature].mean()
-
 	dictionary[feature] = []
 	position = 0 
 
 	for value in df[feature]:
-		position += 1
 		if greater_than_xstds(value, std, mean, multiplier = xstd):
 			index_v = dictionary[feature].append((position,
 												  value,
@@ -71,20 +81,72 @@ def check_for_outliers(df, feature, xstd = 3):
 												  std))
 		else:
 			pass
-
+		position += 1
 	return dictionary
 
 outliers = 0
+
+# Here we will use our check_for_outliers function to loop through every feature
+# in search of outliers
 
 for feature in features_list:
 	a = check_for_outliers(df, feature, xstd = 2.5)
 	if a:
 		outliers = a
 
-pp.pprint(outliers)
+# pp.pprint(outliers)
+
+# let's make a list of all outlier instance by index number, and then a set of 
+# these row indexes to eliminat the rown from our dataframe as a whole
+
+outliers_index_numbers = []
+
+for feature in outliers:
+	for tupl in outliers[feature]:
+		outliers_index_numbers.append(tupl[0])
+
+outliers_index_numbers = set(outliers_index_numbers)
+
+# To print, uncomment the enclosed lines:
+################################################################################
+# print
+# print "Rows with outliers: ", len(outliers_index_numbers)
+# print
+# print "Row indexes: "
+# pp.pprint(outliers_index_numbers)
+################################################################################
+
+# Now let's eliminate these
+
+# Here's is the original size (Uncomment):
+# print
+# print "Original size: ",df.shape
+# print
+
+# # Dropping
+
+print
+print df.index[df.poi == 1.0] 
+
+df.drop(outliers_index_numbers, inplace = True)
+
+# Size after dropping (Uncomment):
+# print
+# print "After dropping outlier rows: ",df.shape
+# print
+
+################################################################################
+### Also, I am pickling out this dictionary to perform further independent analysis.
+### link to all code and data is provided in my Notes.py file:
+
+# with open("Outliers_dictionary.pkl", "w") as f:
+# 	pickle.dump(outliers, f)
+
+################################################################################
 
 ### Task 3: Create new feature(s)
 
+print df.poi[ df.poi == 0.0]
 
 # ### Store to my_dataset for easy export below.
 # my_dataset = data_dict
