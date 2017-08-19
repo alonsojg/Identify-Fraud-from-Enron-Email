@@ -299,7 +299,10 @@ find_last_name(df_without_outliers.index)
 
 
 employee_last_names = [i for i in df_without_outliers['last_name'].values]
-employee_file_names = os.listdir("maildir/")
+ 
+
+with open ('employee_file_names.pkl', 'r') as f:
+    employee_file_names = pickle.load(f)
 
 
 # ## Finding filenames in maildir
