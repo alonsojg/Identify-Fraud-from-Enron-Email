@@ -31,20 +31,22 @@ What features did you end up using in your POI identifier, and what selection pr
 
         Financial features:
 
-            bonus: 42.63895031648036,
-            from_poi_to_this_person: 35.7753269262477,
-            long_term_incentive: 29.06434723015042,
-            salary: 30.16719955459407
-
+            bonus: 39.14002444387524,
+            from_poi_to_this_person: 30.56983223116838,
+            long_term_incentive: 27.789725556121923,
+            salary: 28.264638924119147
         Vocabulary features:
     
-            04122001: 159315946.82169878,
-            04182001: 159315946.82169878,
-            06062000: 159315946.82169878,
-            081699: 159315946.82169878,
-            ads: 159315946.82169878,
-            alcatel: 159315946.82169878,
-            apologis: 159315946.82169878
+            alcatel: 1321969.3141762861,
+            channels: 1321969.3141762861,
+            commitment: 1321969.3141762861,
+            creative: 1321969.3141762861,
+            dropout: 1321969.3141762861,
+            fiesta: 1321969.3141762861,
+            fink: 1321969.3141762861,
+            frevertenronenronxg: 1321969.3141762861,
+            fullservic: 1321969.3141762861,
+            johnsonenronenronxg: 1321969.3141762861
 
 
             These vocabulary features are the highest scoring instances of text present in the emails from maildir after all emails used were parsed and vectorized.
@@ -52,7 +54,7 @@ What features did you end up using in your POI identifier, and what selection pr
         Total number of data points: 102
         Total number of POIs in data used: 18
         Total number of non-POIs in data used: 84
-        Total number of features in data used: 11
+        Total number of features in data used: 16
 
     There are no empty features in the final dataset.
 
@@ -70,7 +72,7 @@ What features did you end up using in your POI identifier, and what selection pr
 
         Ultimately, selecting 20th percentile of financial features and 0.01st percentile of email vocabulary features resulted in the best scores:
 
-        Accuracy: 0.80512   Precision: 0.74046  Recall: 0.33950
+        Accuracy: 0.82300   Precision: 0.77547  Recall: 0.41100
 
     "Why did the other Percentiles not provide the best features?"
 
@@ -92,7 +94,7 @@ What does it mean to tune the parameters of an algorithm, and what can happen if
 
     It is important to perform parameter tuning because when it's not, calculations may take longer times to compute or may not obtain the maximum accuracy that a different set of parameters may. An example of this was previously shown in the lectures with the SVC an it's selection of kernels.
 
-    {'algorithm': 'ball_tree', 'leaf_size': 10, 'n_neighbors': 6}
+    {'algorithm': 'ball_tree', 'leaf_size': 10, 'n_neighbors': 5}
 
 What is validation, and what’s a classic mistake you can make if you do it wrong? How did you validate your analysis?  [relevant rubric items: “discuss validation”, “validation strategy”]
 
@@ -102,7 +104,7 @@ What is validation, and what’s a classic mistake you can make if you do it wro
 
 Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance. [relevant rubric item: “usage of evaluation metrics”]
 
-    Accuracy: 0.80512   Precision: 0.74046  Recall: 0.33950
+    Accuracy: 0.82300   Precision: 0.77547  Recall: 0.41100
 
     Accuracy is the percentage of predictions that the classifier got correctly, regardless of what the prediction was (how many poi and non-poi it predicted correctly). Precision is the percentage of True positive poi's flagged out of all positive poi's flagged (# of true positives divided by # of true and false positives) predicted by the classifier. Recall on the other hand is the percentage of true positive poi's flagged out of all true poi's that exist in the set.
 

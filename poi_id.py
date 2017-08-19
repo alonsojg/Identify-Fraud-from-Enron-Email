@@ -392,60 +392,86 @@ def parseOutText(f):
 
 
 def get_email_root_words(df_without_outliers, employees_email_dirs):
-    
-    emp_name_abs = []
-    list_of_list = []
-    
-    # Let's switch to our tools folder to get our parsing function
-    
-    #Now, let's switch to our maildir folder to get our emails
-    employee_names = [i for i in df_without_outliers.last_name.values]
-    index_number = 0
 
-    print
-    print "Obtaining respective employees emails' root words: "
-    print
-    
-    for employee_name in employees_email_dirs:
+    if ("list_of_vocabs.pkl" in os.listdir(os.getcwd()))\
+     and ("emp_name_abs.pkl" in os.listdir(os.getcwd())):
+
+        with open('list_of_vocabs.pkl', 'r') as f:
+            list_of_vocabs = pickle.load(f)
+
+        with open('emp_name_abs.pkl', 'r') as f:
+            emp_name_abs = pickle.load(f) 
+
+        return list_of_vocabs, emp_name_abs
+
+    else:
+
+        emp_name_abs = []
+        list_of_vocabs = []
         
-        string_of_words = 0
-        os.chdir(dp+"\maildir")
-
-        try:
-
-            string_of_words = []
-            os.chdir(dp+"\maildir\{}".format(employee_name))
-            print os.getcwd()
-            files = [i for i in os.listdir(os.getcwd())]
-
-            for f in files:
-                
-                os.chdir(dp+"\maildir\{}\{}".format(employee_name,f))
-                emails = [i for i in os.listdir(os.getcwd())]
-                
-                for email in emails:
-                
-                    try:
-
-                        f = open(email, "r")
-                        string_of_words.append(parseOutText(f)) 
-
-                    except:
-                        pass
-
-            string_of_words = " ".join(string_of_words)
-
-            list_of_list.append(string_of_words)
-            emp_name_abs.append([employee_name,
-            df_without_outliers.poi[df_without_outliers.last_name == \
-            employee_name][0]])
-
-        except:    
-            pass
+        # Let's switch to our tools folder to get our parsing function
         
-    df_without_outliers = df_without_outliers.drop('last_name', axis = 1)
-    
-    return list_of_list, emp_name_abs
+        #Now, let's switch to our maildir folder to get our emails
+        employee_names = [i for i in df_without_outliers.last_name.values]
+        index_number = 0
+
+        print
+        print "Obtaining respective employees emails' root words: "
+        print
+        
+        for employee_name in employees_email_dirs:
+            
+            string_of_words = 0
+            os.chdir(dp+"\maildir")
+
+            try:
+
+                string_of_words = []
+                os.chdir(dp+"\maildir\{}".format(employee_name))
+                print os.getcwd()
+                files = [i for i in os.listdir(os.getcwd())]
+
+                for f in files:
+                    
+                    os.chdir(dp+"\maildir\{}\{}".format(employee_name,f))
+                    emails = [i for i in os.listdir(os.getcwd())]
+                    
+                    for email in emails:
+                    
+                        try:
+
+                            f = open(email, "r")
+                            string_of_words.append(parseOutText(f)) 
+
+                        except:
+                            pass
+
+                string_of_words = " ".join(string_of_words)
+
+                list_of_vocabs.append(string_of_words)
+                emp_name_abs.append([employee_name,
+                df_without_outliers.poi[df_without_outliers.last_name == \
+                employee_name][0]])
+
+            except:    
+                pass
+            
+        df_without_outliers = df_without_outliers.drop('last_name', axis = 1)
+
+        print len(emp_name_abs)
+        print len(list_of_vocabs)
+
+        os.chdir(dp)
+
+        with open('emp_name_abs.pkl','w') as f:
+            pickle.dump(emp_name_abs,f) 
+
+        with open('list_of_vocabs.pkl','w') as f:
+            pickle.dump(list_of_vocabs,f)
+
+        
+        
+        return list_of_vocabs, emp_name_abs
 
 # ### Calling our function
 
@@ -456,8 +482,10 @@ def get_email_root_words(df_without_outliers, employees_email_dirs):
 
 
 
-list_of_list, emp_name_abs = get_email_root_words(df_without_outliers,
+list_of_vocabs, emp_name_abs = get_email_root_words(df_without_outliers,
 														employees_email_dirs)
+
+# let's dump these lists
 
 
 
@@ -482,11 +510,11 @@ emp_name_abs = [i[1] for i in emp_name_abs]
 # from our email data for a better performance in the application of ML later on
 
 
-def make_dataset(list_of_list, emp_name_abs, df_without_outliers,
+def make_dataset(list_of_vocabs, emp_name_abs, df_without_outliers,
 				 employees_w_email_dir):
     
     X_train, X_test, y_train, y_test = model_selection.train_test_split(
-    								list_of_list, emp_name_abs, test_size = 0.1)
+    								list_of_vocabs, emp_name_abs, test_size = 0.1)
 
     vectorizer = TfidfVectorizer(sublinear_tf=True,
                                  stop_words='english',
@@ -532,7 +560,7 @@ def make_dataset(list_of_list, emp_name_abs, df_without_outliers,
     return features, labels, features_of_interest, scores_report
 
 features, labels, features_of_interest, scores_report =\
-	make_dataset(list_of_list,
+	make_dataset(list_of_vocabs,
 				 emp_name_abs,
   				 df_without_outliers,
   				 employees_w_email_dir)    
