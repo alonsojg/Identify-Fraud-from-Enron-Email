@@ -95,6 +95,14 @@ What is validation, and what’s a classic mistake you can make if you do it wro
 
     Validation is important in order to address the performance of any classifier and review whether such performance satisfies standards set forth by the analysts.
 
+    What can happen if we train an algorithm on the entire dataset?
+
+    if trained on the entire dataset we will have a biased classifier that can close to accurately predict a data point, since it has already been trained on such point.
+
+    Why do we split the data into training and test sets?
+
+    In order to have a sample to mold the classifier on, but a fresh new sample to evaluate how accurate the algorithm is predicting familiar, but not data that is identical to the training set. Like teaching a child how to add numbers with a set of numbers, but then testing them on how they perform the task with fresh, new numbers.
+
 Give at least 2 evaluation metrics and your average performance for each of them.  Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance. [relevant rubric item: “usage of evaluation metrics”]
 
     Accuracy: 0.82300   Precision: 0.77547  Recall: 0.41100
