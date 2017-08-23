@@ -6,6 +6,7 @@ from sklearn import model_selection
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.feature_selection import SelectPercentile, f_classif
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn import ensemble
 from sklearn import neighbors
 from sklearn import naive_bayes
@@ -104,9 +105,10 @@ df.set_index('name', inplace = True)
 df.sort_index(inplace = True)
 
 # Looking through the list I noticed a row denominated as "TOTAL"
+# and another denominated as "THE TRAVEL AGENCY IN THE PARK"
 # this is clearly a mistake, so let's just remove it:
 
-df.drop('TOTAL', inplace = True)
+df.drop(['TOTAL','THE TRAVEL AGENCY IN THE PARK'], inplace = True)
 
 
 
@@ -179,7 +181,7 @@ def checking_features(features_list, df):
 	outliers = 0
 
 	for feature in features_list:
-	    a = check_for_outliers(df, feature, xstd = 1.8)
+	    a = check_for_outliers(df, feature, xstd = 1.2)
 	    if a:
 	        outliers = a
 
@@ -221,6 +223,7 @@ print
 df_without_outliers = df.drop(outliers_df[outliers_df["poi"] == 0].index.values,
 							  axis = 0)
 
+
 print 
 print "completed"
 print
@@ -238,16 +241,19 @@ def pca(df_without_outliers):
     
     df1 = df_without_outliers.copy()    
     
-    labels = df1.poi.copy()
-    features = df1.drop("poi", axis = 1)
+    labels = df1.poi.copy().values
+    features = df1.drop("poi", axis = 1).values
 
-    features_names = np.array(features.columns.tolist())
+    features_names = np.array(df1.drop("poi", axis = 1).columns.tolist())
+
+    sss = StratifiedShuffleSplit(n_splits=3, test_size=0.2)
+
+    for train_index, test_index in sss.split(features, labels): 
+        X_train, X_test = features[train_index], features[test_index]
+        y_train, y_test = labels[train_index], labels[test_index]
     
-    X_train, X_test, y_train, y_test = model_selection.train_test_split(
-    													features,
-    												labels, test_size = 0.20)
 
-    selector = SelectPercentile(f_classif, percentile = 20)
+    selector = SelectPercentile(f_classif, percentile = 15)
     selector.fit(X_train, y_train)
     
     important_features = selector.get_support(indices=False)
@@ -676,11 +682,17 @@ def do_grid_search(df_without_outliers):
 
     my_dataset = df_without_outliers.reset_index().copy()
 
-    labels = my_dataset.poi.values.tolist()
+    labels = my_dataset.poi
     features = my_dataset.reset_index().drop("poi", axis = 1).values
 
-    X_train, X_test, y_train, y_test = \
-              model_selection.train_test_split(features,labels,test_size = 0.1)
+    sss = StratifiedShuffleSplit(n_splits=3, test_size=0.05)
+
+    for train_index, test_index in sss.split(features, labels): 
+        X_train, X_test = features[train_index], features[test_index]
+        y_train, y_test = labels[train_index], labels[test_index]
+
+    # X_train, X_test, y_train, y_test = \
+    #           model_selection.train_test_split(features,labels,test_size = 0.1)
 
     knb = neighbors.KNeighborsClassifier()
     
@@ -707,11 +719,17 @@ def do_ml(df_without_outliers):
     
     my_dataset = df_without_outliers.reset_index().copy()
 
-    labels = my_dataset.poi.values.tolist()
+    labels = my_dataset.poi
     features = my_dataset.reset_index().drop("poi", axis = 1).values
+
+    sss = StratifiedShuffleSplit(n_splits=3, test_size=0.05)
+
+    for train_index, test_index in sss.split(features, labels): 
+        X_train, X_test = features[train_index], features[test_index]
+        y_train, y_test = labels[train_index], labels[test_index]
     
-    X_train, X_test, y_train, y_test = \
-     		  model_selection.train_test_split(features,labels,test_size = 0.1)
+    # X_train, X_test, y_train, y_test = \
+    #  		  model_selection.train_test_split(features,labels,test_size = 0.1)
     
     # clf = ensemble.RandomForestClassifier()
 
@@ -782,22 +800,22 @@ os.chdir(dp+"\\final_project")
 
 # Pickling our classifier
 
-# with open("my_classifier.pkl", "w") as f:
-#     pickle.dump(clf, f)
+with open("my_classifier.pkl", "w") as f:
+    pickle.dump(clf, f)
 
-# # Pickling our dataset
+# Pickling our dataset
 
-# with open("my_dataset.pkl", "w") as f:
-#     df = df_without_outliers.to_dict(orient = "index")
-#     pickle.dump(df, f)
+with open("my_dataset.pkl", "w") as f:
+    df = df_without_outliers.to_dict(orient = "index")
+    pickle.dump(df, f)
 
-# # Pickling our feature_list
+# Pickling our feature_list
 
-# with open("my_feature_list.pkl", "w") as f:
-#     df = df_without_outliers
-#     lista = df.columns.values.tolist()
-#     lista.insert(0, lista.pop(lista.index("poi")))
-#     pickle.dump(list(lista), f)
+with open("my_feature_list.pkl", "w") as f:
+    df = df_without_outliers
+    lista = df.columns.values.tolist()
+    lista.insert(0, lista.pop(lista.index("poi")))
+    pickle.dump(list(lista), f)
 
 print 
 print "completed"

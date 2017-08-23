@@ -16,8 +16,7 @@ Summarize for us the goal of this project and how machine learning is useful in 
 
     Outliers removed:
 
-    ['ALLEN PHILLIP K', 'BAXTER JOHN C', 'BAY FRANKLIN R', 'BECK SALLY W', 'WHALLEY LAWRENCE G', 'BHATNAGAR SANJAY', 'WINOKUR JR. HERBERT S', 'BLAKE JR. NORMAN P', 'URQUHART JOHN A', 'CHAN RONNIE', 'WAKEHAM JOHN', 'DERRICK JR. JAMES V', 'DIETRICH JANET R', 'DONAHUE JR JEFFREY M', 'DUNCAN JOHN H', 'ECHOLS JOHN B', 'FREVERT MARK A', 'GRAMM WENDY L', 'HAEDICKE MARK E', 'HORTON STANLEY C', 'WHITE JR THOMAS E', 'HUMPHREY GENE E', 'JAEDICKE ROBERT', 'KAMINSKI WINCENTY J', 'KEAN STEVEN J', 'KITCHEN LOUISE', 'LAVORATO JOHN J', 'LEFF DANIEL P', 'LEMAISTRE CHARLES', 'MARTIN AMANDA K', 'MCCLELLAN GEORGE', 'MCCONNELL MICHAEL S', 'MCMAHON JEFFREY', 'MENDELSOHN JOHN', 'MEYER ROCKFORD G', 'MULLER MARK S', 'PAI LOU L', 'PEREIRA PAULO V. FERRAZ', 'PICKERING MARK R', 'REDMOND BRIAN L', 'SAVAGE FRANK', 'SHANKMAN JEFFREY A', 'SHAPIRO RICHARD S']
-
+    ['ALLEN PHILLIP K', 'BAXTER JOHN C', 'BAY FRANKLIN R', 'BECK SALLY W', 'WHALLEY LAWRENCE G', 'BHATNAGAR SANJAY', 'WINOKUR JR. HERBERT S', 'BLACHMAN JEREMY M', 'URQUHART JOHN A', 'CHAN RONNIE', 'WAKEHAM JOHN', 'DERRICK JR. JAMES V', 'DIETRICH JANET R', 'DIMICHELE RICHARD G', 'DONAHUE JR JEFFREY M', 'DUNCAN JOHN H', 'ECHOLS JOHN B', 'FALLON JAMES B', 'FREVERT MARK A', 'GRAMM WENDY L', 'HAEDICKE MARK E', 'HICKERSON GARY J', 'HORTON STANLEY C', 'WHITE JR THOMAS E', 'HUMPHREY GENE E', 'IZZO LAWRENCE L', 'JAEDICKE ROBERT', 'KAMINSKI WINCENTY J', 'KEAN STEVEN J', 'KISHKILL JOSEPH G', 'KITCHEN LOUISE', 'LAVORATO JOHN J', 'LEFF DANIEL P', 'LEMAISTRE CHARLES', 'BLAKE JR. NORMAN P', 'MARTIN AMANDA K', 'MCCLELLAN GEORGE', 'MCCONNELL MICHAEL S', 'MCMAHON JEFFREY', 'MENDELSOHN JOHN', 'METTS MARK', 'MEYER ROCKFORD G', 'MULLER MARK S', 'PAI LOU L', 'PEREIRA PAULO V. FERRAZ', 'PICKERING MARK R', 'PIPER GREGORY F', 'REDMOND BRIAN L', 'SAVAGE FRANK', 'BUY RICHARD B', 'SHANKMAN JEFFREY A', 'SHAPIRO RICHARD S', 'SHARP VICTORIA T', 'SHERRIFF JOHN R', 'SUNDE MARTIN','THE TRAVEL AGENCY IN THE PARK', 'TOTAL']
 
 What features did you end up using in your POI identifier, and what selection process did you use to pick them? Did you have to do any scaling? Why or why not? As part of the assignment, you should attempt to engineer your own feature that does not come ready-made in the dataset -- explain what feature you tried to make, and the rationale behind it. (You do not necessarily have to use it in the final analysis, only engineer and test it.) In your feature selection step, if you used an algorithm like a decision tree, please also give the feature importances of the features that you use, and if you used an automated feature selection function like SelectKBest, please report the feature scores and reasons for your choice of parameter values.  [relevant rubric items: “create new features”, “intelligently select features”, “properly scale features”]
 
@@ -31,30 +30,24 @@ What features did you end up using in your POI identifier, and what selection pr
 
         Financial features:
 
-            bonus: 39.14002444387524,
-            from_poi_to_this_person: 30.56983223116838,
-            long_term_incentive: 27.789725556121923,
-            salary: 28.264638924119147
+            bonus: 32.586053296934416
+            from_poi_to_this_person: 33.10771762061068
+            shared_receipt_with_poi: 34.59099852317178
+
         Vocabulary features:
     
-            alcatel: 1321969.3141762861,
-            channels: 1321969.3141762861,
-            commitment: 1321969.3141762861,
-            creative: 1321969.3141762861,
-            dropout: 1321969.3141762861,
-            fiesta: 1321969.3141762861,
-            fink: 1321969.3141762861,
-            frevertenronenronxg: 1321969.3141762861,
-            fullservic: 1321969.3141762861,
-            johnsonenronenronxg: 1321969.3141762861
+            country: 1358997.6790838467
+            desert: 1358997.6790838467
+            dir: 1358997.6790838467
+            meat: 1358997.6790838467
 
 
             These vocabulary features are the highest scoring instances of text present in the emails from maildir after all emails used were parsed and vectorized.
 
-        Total number of data points: 102
+        Total number of data points: 90
         Total number of POIs in data used: 18
-        Total number of non-POIs in data used: 84
-        Total number of features in data used: 16
+        Total number of non-POIs in data used: 72
+        Total number of features in data used: 9
 
     There are no empty features in the final dataset.
 
@@ -70,7 +63,7 @@ What features did you end up using in your POI identifier, and what selection pr
 
         selecting 10th percentile of financial features and 0.001st percentile of email vocabulary features threw an error in which not one vocabulary feature was selected and could not be tested
 
-        Ultimately, selecting 20th percentile of financial features and 0.01st percentile of email vocabulary features resulted in the best scores:
+        Ultimately, selecting 15th percentile of financial features and 0.01st percentile of email vocabulary features resulted in the best scores:
 
         Accuracy: 0.82300   Precision: 0.77547  Recall: 0.41100
 
