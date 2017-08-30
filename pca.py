@@ -1,5 +1,5 @@
 from sklearn.feature_selection import SelectPercentile, f_classif
-from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn import model_selection
 import numpy as np
 
 def pca(df_without_outliers):
@@ -11,12 +11,8 @@ def pca(df_without_outliers):
 
     features_names = np.array(df1.drop("poi", axis = 1).columns.tolist())
 
-    sss = StratifiedShuffleSplit(n_splits=3, test_size=0.2)
-
-    for train_index, test_index in sss.split(features, labels): 
-        X_train, X_test = features[train_index], features[test_index]
-        y_train, y_test = labels[train_index], labels[test_index]
-    
+    X_train, X_test, y_train, y_test = model_selection.train_test_split(
+                                    features, labels, test_size = 0.1)    
 
     selector = SelectPercentile(f_classif, percentile = 15)
     selector.fit(X_train, y_train)

@@ -3,7 +3,7 @@ S'poi'
 p1
 aS'bonus'
 p2
-aS'from_poi_to_this_person'
+aS'expenses'
 p3
 aS'shared_receipt_with_poi'
 p4

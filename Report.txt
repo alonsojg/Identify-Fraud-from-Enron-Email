@@ -16,9 +16,9 @@ Summarize for us the goal of this project and how machine learning is useful in 
 
     Outliers removed:
 
-    ['ALLEN PHILLIP K', 'BAXTER JOHN C', 'BAY FRANKLIN R', 'BECK SALLY W', 'WHALLEY LAWRENCE G', 'BHATNAGAR SANJAY', 'WINOKUR JR. HERBERT S', 'BLACHMAN JEREMY M', 'URQUHART JOHN A', 'CHAN RONNIE', 'WAKEHAM JOHN', 'DERRICK JR. JAMES V', 'DIETRICH JANET R', 'DIMICHELE RICHARD G', 'DONAHUE JR JEFFREY M', 'DUNCAN JOHN H', 'ECHOLS JOHN B', 'FALLON JAMES B', 'FREVERT MARK A', 'GRAMM WENDY L', 'HAEDICKE MARK E', 'HICKERSON GARY J', 'HORTON STANLEY C', 'WHITE JR THOMAS E', 'HUMPHREY GENE E', 'IZZO LAWRENCE L', 'JAEDICKE ROBERT', 'KAMINSKI WINCENTY J', 'KEAN STEVEN J', 'KISHKILL JOSEPH G', 'KITCHEN LOUISE', 'LAVORATO JOHN J', 'LEFF DANIEL P', 'LEMAISTRE CHARLES', 'BLAKE JR. NORMAN P', 'MARTIN AMANDA K', 'MCCLELLAN GEORGE', 'MCCONNELL MICHAEL S', 'MCMAHON JEFFREY', 'MENDELSOHN JOHN', 'METTS MARK', 'MEYER ROCKFORD G', 'MULLER MARK S', 'PAI LOU L', 'PEREIRA PAULO V. FERRAZ', 'PICKERING MARK R', 'PIPER GREGORY F', 'REDMOND BRIAN L', 'SAVAGE FRANK', 'BUY RICHARD B', 'SHANKMAN JEFFREY A', 'SHAPIRO RICHARD S', 'SHARP VICTORIA T', 'SHERRIFF JOHN R', 'SUNDE MARTIN','THE TRAVEL AGENCY IN THE PARK', 'TOTAL']
+    ['ALLEN PHILLIP K', 'URQUHART JOHN A', 'BAXTER JOHN C', 'BAY FRANKLIN R', 'BECK SALLY W', 'WHALLEY LAWRENCE G', 'WHITE JR THOMAS E', 'BHATNAGAR SANJAY', 'BLACHMAN JEREMY M', 'WAKEHAM JOHN', 'CHAN RONNIE', 'DERRICK JR. JAMES V', 'DIETRICH JANET R', 'DIMICHELE RICHARD G', 'DONAHUE JR JEFFREY M', 'DUNCAN JOHN H', 'ECHOLS JOHN B', 'FALLON JAMES B', 'FREVERT MARK A', 'GRAMM WENDY L', 'HAEDICKE MARK E', 'HICKERSON GARY J', 'HORTON STANLEY C', 'WINOKUR JR. HERBERT S', 'HUMPHREY GENE E', 'IZZO LAWRENCE L', 'JAEDICKE ROBERT', 'KAMINSKI WINCENTY J', 'KEAN STEVEN J', 'KISHKILL JOSEPH G', 'KITCHEN LOUISE', 'LAVORATO JOHN J', 'LEFF DANIEL P', 'LEMAISTRE CHARLES', 'BLAKE JR. NORMAN P', 'MARTIN AMANDA K', 'MCCLELLAN GEORGE', 'MCCONNELL MICHAEL S', 'MCMAHON JEFFREY', 'MENDELSOHN JOHN', 'METTS MARK', 'MEYER ROCKFORD G', 'MULLER MARK S', 'PAI LOU L', 'PEREIRA PAULO V. FERRAZ', 'PICKERING MARK R', 'PIPER GREGORY F', 'REDMOND BRIAN L', 'SAVAGE FRANK', 'BUY RICHARD B', 'SHANKMAN JEFFREY A', 'SHAPIRO RICHARD S', 'SHARP VICTORIA T', 'SHERRIFF JOHN R', 'SUNDE MARTIN','THE TRAVEL AGENCY IN THE PARK', 'TOTAL']
 
-What features did you end up using in your POI identifier, and what selection process did you use to pick them? Did you have to do any scaling? Why or why not? As part of the assignment, you should attempt to engineer your own feature that does not come ready-made in the dataset -- explain what feature you tried to make, and the rationale behind it. (You do not necessarily have to use it in the final analysis, only engineer and test it.) In your feature selection step, if you used an algorithm like a decision tree, please also give the feature importances of the features that you use, and if you used an automated feature selection function like SelectKBest, please report the feature scores and reasons for your choice of parameter values.  [relevant rubric items: “create new features”, “intelligently select features”, “properly scale features”]
+What features did you end up using in your POI identifier, and what selection process did you use to pick them? Did you have to do any scaling? Why or why not? As part of the assignment, you should attempt to engineer your own feature that does not come ready-made in the dataset -- explain what feature you tried to make, and the rationale behind it. (You do not necessarily have to use it in the final analysis, only engineer and test it.) In your feature selection step, if you used an algorithm like a decision tree, please also give the feature importances of the features that you use, and if you used an automated feature selection function like SelectKBest, please report the feature scores and reasons for your choice of parameter values.  [relevant rubric items: “create new features”, “intelly igentlselect features”, “properly scale features”]
 
     The features selected vary depending on what sklearn.feature_selection's SelectPercentile outputs every time poi.py runs; I decided to use this method since it is a more efficient way to pick the best features to use. I did use data scaling in order to achieve better accuracy.  
 
@@ -30,19 +30,19 @@ What features did you end up using in your POI identifier, and what selection pr
 
         Financial features:
 
-            bonus: 40.380919249341034
-            from_poi_to_this_person: 38.533539623601285
-            shared_receipt_with_poi: 38.06396862664726
+            bonus: 32.2173867194356
+            expenses: 40.39414579383621
+            shared_receipt_with_poi: 52.89464618673941
 
         Vocabulary features:
     
-            classmat: 2557793.0826252424
-            companion: 2557793.0826252424
-            creek: 551561.26488394872
-            existing: 2557793.0826252424
-            marshallenron: 2557793.0826252424
-            ramp: 2557793.0826252424
-            se20: 2557793.0826252424
+            classmat: 2557793.0812534555
+            companion: 2557793.0812534555
+            creek: 551561.26492954034
+            existing: 2557793.0812534555
+            marshallenron: 2557793.0812534555
+            ramp: 2557793.0812534555
+            se20: 2557793.0812534555   
 
 
             These vocabulary features are the highest scoring instances of text present in the emails from maildir after all emails used were parsed and vectorized.
@@ -68,7 +68,7 @@ What features did you end up using in your POI identifier, and what selection pr
 
         Ultimately, selecting 15th percentile of financial features and 0.01st percentile of email vocabulary features resulted in the best scores:
 
-        Accuracy: 0.89157   Precision: 0.86781  Recall: 0.73200
+        Accuracy: 0.84937   Precision: 0.89163  Recall: 0.45250
 
     "Why did the other Percentiles not provide the best features?"
 
