@@ -2,9 +2,12 @@ from collections import Counter
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 from numpy import inf
+from pca import pca
 from sklearn import model_selection
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.feature_selection import SelectPercentile, f_classif
+from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn import ensemble
@@ -14,6 +17,7 @@ from sklearn import tree
 from sklearn import svm
 from sklearn import preprocessing
 
+
 import numpy as np
 import os
 import pandas as pd
@@ -21,7 +25,6 @@ import pickle
 import pprint as pp
 import string
 import sys
-
 
 dp = sys.path[0]
 
@@ -88,7 +91,6 @@ list_of_dicts = dict_rewrite(dataset)
 # pp.pprint(list_of_dicts) # Uncomment this line to see the list of dictionaries
 
 
-
 # ### From list of dictionaries to pandas-dataframe.
 
 # let's turn list_of_dicts into a pandas df
@@ -98,6 +100,13 @@ df = pd.DataFrame(list_of_dicts)
 # Now, let's reassign our name column as our index column
 
 df.set_index('name', inplace = True)
+
+# let's also check if any row is empty or filled with only NaN's
+print "Empty rows:"
+print 
+
+df.replace(to_replace = '', value = np.nan, inplace = True)
+print any(df.isnull().any(axis=1).tolist())
 
 # We use the argument inplace to reassign the value of our original variable 
 # name, df, to our new, modified dataframe.
@@ -235,44 +244,8 @@ print "Task 3"
 print
 
 # pca will now be applied in our to find those features of greatest importances
-# from our original final_project_dataset.pkl file
-
-def pca(df_without_outliers):
-    
-    df1 = df_without_outliers.copy()    
-    
-    labels = df1.poi.copy().values
-    features = df1.drop("poi", axis = 1).values
-
-    features_names = np.array(df1.drop("poi", axis = 1).columns.tolist())
-
-    sss = StratifiedShuffleSplit(n_splits=3, test_size=0.2)
-
-    for train_index, test_index in sss.split(features, labels): 
-        X_train, X_test = features[train_index], features[test_index]
-        y_train, y_test = labels[train_index], labels[test_index]
-    
-
-    selector = SelectPercentile(f_classif, percentile = 15)
-    selector.fit(X_train, y_train)
-    
-    important_features = selector.get_support(indices=False)
-
-    scores = selector.scores_
-    
-    scores = scores[important_features].tolist() 
-
-    pca_features = features_names[important_features].tolist()
-
-    scores_report =\
-	{pca_features[i]:scores[i] for i in range(len(pca_features))}
-    
-    if 'poi' not in pca_features:
-        pca_features.append('poi')
-
-    return pca_features, scores_report
-
-
+# from our original final_project_dataset.pkl file. This will be done with the
+# pca function defined in pca.py
 
 pca_features, scores_report = pca(df_without_outliers)
 
@@ -685,33 +658,58 @@ def do_grid_search(df_without_outliers):
     labels = my_dataset.poi
     features = my_dataset.reset_index().drop("poi", axis = 1).values
 
-    sss = StratifiedShuffleSplit(n_splits=3, test_size=0.05)
+    sss = StratifiedShuffleSplit(n_splits=3, test_size=0.1)
+    
+    nnbs = []
+    lsbs = []
+    absc = []
+    precisions = []
+    recalls = []
 
     for train_index, test_index in sss.split(features, labels): 
         X_train, X_test = features[train_index], features[test_index]
         y_train, y_test = labels[train_index], labels[test_index]
 
-    # X_train, X_test, y_train, y_test = \
-    #           model_selection.train_test_split(features,labels,test_size = 0.1)
+        knb = neighbors.KNeighborsClassifier()
+        
+        parameters = {'n_neighbors':
+                            [5,6,7],
+                      'algorithm':
+                            ('ball_tree', 'kd_tree', 'brute'),
+                      'leaf_size':
+                            [10, 20, 30, 40]}
 
-    knb = neighbors.KNeighborsClassifier()
-    
-    parameters = {'n_neighbors':
-                        [5,6,7],
-                  'algorithm':
-                        ('ball_tree', 'kd_tree', 'brute'),
-                  'leaf_size':
-                        [10, 20, 30, 40]}
+        clf = GridSearchCV(knb, parameters, cv=5)
 
-    clf = GridSearchCV(knb, parameters, cv=5)
+        clf.fit(X_train, y_train)
 
-    clf.fit(X_train, y_train)
+        preds = clf.predict(X_test)
 
-    print
-    pp.pprint(clf.best_params_)
-    print
+        print
+        pp.pprint(clf.best_params_)
+        print
 
-    return clf.best_params_
+        nnbs.append(clf.best_params_['n_neighbors'])
+        lsbs.append(clf.best_params_['leaf_size'])
+        absc.append(clf.best_params_['algorithm'])
+
+        precisions.append(precision_score(y_test.tolist(), preds.tolist()\
+            , average='binary'))
+        recalls.append(recall_score(y_test.tolist(), preds.tolist()\
+            , average='binary'))
+
+
+    print 'precision ',reduce(lambda x, y: x + y, precisions) / len(precisions)
+    print 'recall ',reduce(lambda x, y: x + y, recalls) / len(recalls)
+
+
+    return {
+        'algorithm': max(set(absc), key=absc.count),
+        'leaf_size': reduce(lambda x, y: x + y, lsbs) / len(lsbs),
+        'n_neighbors': reduce(lambda x, y: x + y, nnbs) / len(nnbs)
+    }
+
+        
 
 def do_ml(df_without_outliers):
 
@@ -722,30 +720,24 @@ def do_ml(df_without_outliers):
     labels = my_dataset.poi
     features = my_dataset.reset_index().drop("poi", axis = 1).values
 
-    sss = StratifiedShuffleSplit(n_splits=3, test_size=0.05)
-
-    for train_index, test_index in sss.split(features, labels): 
-        X_train, X_test = features[train_index], features[test_index]
-        y_train, y_test = labels[train_index], labels[test_index]
-    
-    # X_train, X_test, y_train, y_test = \
-    #  		  model_selection.train_test_split(features,labels,test_size = 0.1)
+    X_train, X_test, y_train, y_test = \
+     		  model_selection.train_test_split(features,labels,test_size = 0.1)
     
     # clf = ensemble.RandomForestClassifier()
 
     # clf = svm.LinearSVC(kernel = "rbf")
-    
+
     clf =\
-     neighbors.KNeighborsClassifier(n_neighbors = best_params['n_neighbors'],
-                                         algorithm = best_params['algorithm'],
-                                         leaf_size = best_params['leaf_size'])
+    neighbors.KNeighborsClassifier(n_neighbors = best_params['n_neighbors'],
+                                    algorithm = best_params['algorithm'],
+                                    leaf_size = best_params['leaf_size'])
 
 
     clf.fit(X_train, y_train)
     
     confidence = clf.score(X_test, y_test)
     predictions = clf.predict(X_test)
-    
+
     return clf
  
 print

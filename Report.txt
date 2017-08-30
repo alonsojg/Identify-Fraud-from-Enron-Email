@@ -30,24 +30,27 @@ What features did you end up using in your POI identifier, and what selection pr
 
         Financial features:
 
-            bonus: 32.586053296934416
-            from_poi_to_this_person: 33.10771762061068
-            shared_receipt_with_poi: 34.59099852317178
+            bonus: 40.380919249341034
+            from_poi_to_this_person: 38.533539623601285
+            shared_receipt_with_poi: 38.06396862664726
 
         Vocabulary features:
     
-            country: 1358997.6790838467
-            desert: 1358997.6790838467
-            dir: 1358997.6790838467
-            meat: 1358997.6790838467
+            classmat: 2557793.0826252424
+            companion: 2557793.0826252424
+            creek: 551561.26488394872
+            existing: 2557793.0826252424
+            marshallenron: 2557793.0826252424
+            ramp: 2557793.0826252424
+            se20: 2557793.0826252424
 
 
             These vocabulary features are the highest scoring instances of text present in the emails from maildir after all emails used were parsed and vectorized.
 
-        Total number of data points: 90
+        Total number of data points: 89
         Total number of POIs in data used: 18
-        Total number of non-POIs in data used: 72
-        Total number of features in data used: 9
+        Total number of non-POIs in data used: 71
+        Total number of features in data used: 12
 
     There are no empty features in the final dataset.
 
@@ -65,7 +68,7 @@ What features did you end up using in your POI identifier, and what selection pr
 
         Ultimately, selecting 15th percentile of financial features and 0.01st percentile of email vocabulary features resulted in the best scores:
 
-        Accuracy: 0.82300   Precision: 0.77547  Recall: 0.41100
+        Accuracy: 0.89157   Precision: 0.86781  Recall: 0.73200
 
     "Why did the other Percentiles not provide the best features?"
 
