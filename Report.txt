@@ -98,6 +98,14 @@ What is validation, and what’s a classic mistake you can make if you do it wro
 
     Validation is important in order to address the performance of any classifier and review whether such performance satisfies standards set forth by the analysts.
 
+    Why was Stratified Shuffle Split used?
+
+    Here the validation strategy is the use of Stratified shuffle split. In this case the use of sss is optimal due to the imbalance of present POI in our dataset (there are way more non-POI than POI). By using sss we can even out this imbalance to better train our classifier.
+
+    How much percent of the data was split into training data and testing data?
+
+    about 90% of the data was used as trining data, and 10% into test data.
+
     What can happen if we train an algorithm on the entire dataset?
 
     if trained on the entire dataset we will have a biased classifier that can close to accurately predict a data point, since it has already been trained on such point.
